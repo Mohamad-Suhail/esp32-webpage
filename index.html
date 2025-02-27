@@ -3,19 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ESP32 Task Control</title>
-    <script>
-        function sendTask(task) {
-            fetch("http://192.168.217.166/execute?task=" + task)  // Replace with your ESP32 IP
-            .then(response => response.text())
-            .then(data => console.log("ESP32 Response:", data))
-            .catch(error => console.error("Error:", error));
-        }
-    </script>
+    <title>Master Robot Control</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        .status { margin-top: 20px; font-size: 20px; }
+        button { padding: 10px; margin: 10px; font-size: 16px; }
+    </style>
 </head>
 <body>
-    <h2>ESP32 Task Assignment</h2>
-    <button onclick="sendTask('task1_master')">Task 1 (Master)</button>
-    <button onclick="sendTask('task2_master')">Task 2 (Master)</button>
+    <h1>Master Robot Control</h1>
+    <p>Select tasks for the master and slave robots:</p>
+    
+    <label for="task1">Product 1:</label>
+    <select id="task1">
+        <option value="none">Select Location</option>
+        <option value="location1">Location 1</option>
+        <option value="location2">Location 2</option>
+    </select>
+    
+    <label for="task2">Product 2:</label>
+    <select id="task2">
+        <option value="none">Select Location</option>
+        <option value="location1">Location 1</option>
+        <option value="location2">Location 2</option>
+    </select>
+    
+    <br><br>
+    <button onclick="assignTask()">Assign Tasks</button>
+    
+    <div class="status" id="status"></div>
+    
+    <script>
+        function assignTask() {
+            let task1 = document.getElementById("task1").value;
+            let task2 = document.getElementById("task2").value;
+
+            if (task1 === "none" || task2 === "none") {
+                document.getElementById("status").innerHTML = "Please assign both tasks!";
+                return;
+            }
+
+            document.getElementById("status").innerHTML = 
+                `Task 1: Product 1 -> ${task1} <br> Task 2: Product 2 -> ${task2}`;
+
+            // Send data to ESP32
+            fetch(`http://<ESP32-IP>/assign?task1=${task1}&task2=${task2}`)
+                .then(response => response.text())
+                .then(data => console.log(data))
+                .catch(error => console.error("Error:", error));
+        }
+    </script>
 </body>
 </html>
+
