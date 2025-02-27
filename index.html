@@ -3,27 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ESP32 LED Control</title>
-    <style>
-        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
-        button { padding: 15px 30px; font-size: 20px; margin: 10px; cursor: pointer; }
-        .on { background-color: green; color: white; }
-        .off { background-color: red; color: white; }
-    </style>
-</head>
-<body>
-    <h1>ESP32 LED Control</h1>
-    <button class="on" onclick="controlLED('on')">Turn ON</button>
-    <button class="off" onclick="controlLED('off')">Turn OFF</button>
-    <p id="status">Status: Waiting...</p>
-
+    <title>ESP32 Task Control</title>
     <script>
-        function controlLED(state) {
-            fetch(`http://192.168.217.166/led?state=${state}`)
-                .then(response => response.text())
-                .then(data => document.getElementById("status").innerHTML = "Status: " + data)
-                .catch(error => console.error("Error:", error));
+        function sendTask(task) {
+            fetch("http://192.168.217.166/execute?task=" + task)  // Replace with ESP32 IP
+            .then(response => response.text())
+            .then(data => console.log("ESP32 Response:", data))
+            .catch(error => console.error("Error:", error));
         }
     </script>
+</head>
+<body>
+    <h2>ESP32 Task Assignment</h2>
+    <button onclick="sendTask('task1_master')">Task 1 (Master)</button>
+    <button onclick="sendTask('task2_master')">Task 2 (Master)</button>
 </body>
 </html>
